@@ -1,0 +1,137 @@
+<%
+  domain = "local"
+  sites = %w{ diabetescirkel gho ghogo hagroweert hco hznk meditta roha rohwn symfonie test zorgmobiel }
+%>
+
+nginx:
+  listen: 127.0.0.1
+  port: 8088
+  ssl: false
+  ssl_rewrite: false
+  cert_path: /etc/nginx/caresharing.eu.pem
+  key_path: /etc/nginx/server.key
+
+applications:
+  account:
+    port: 20101
+
+  base:
+    port: 20201
+
+  base2:
+    port: 20210
+
+  base2api:
+    port: 1980
+
+  chronic:
+    port: 20301
+
+  group:
+    port: 20401
+
+  group2:
+    port: 20410
+
+  bizsp:
+    port: 20801
+
+  clinic:
+    port: 20501
+
+  fundus:
+    port: 20601
+
+  ptlist:
+    port: 20701
+
+  benchmark:
+    port: 21101
+
+  logistics:
+    port: 21301
+
+  hub:
+    port: 21401
+
+  wapi:
+    port: 21501
+
+  supporthub:
+    port: 21601
+
+  datamon:
+    port: 21801
+
+  insurance:
+    port: 21901
+
+  reporting:
+    port: 22001
+
+  helpy:
+    port: 27101
+
+hosts:
+  account:
+    host:
+<%=
+  sites.collect do |s|
+    "      - \"#{s}.#{domain}\""
+  end.join("\n")
+%>
+    routes:
+      '/': account_proxy
+      '/group': group2_proxy
+      '/hub': hub_proxy
+      '/insurance': insurance_proxy
+      '/reporting': reporting_proxy
+      '/logistics': logistics_proxy
+      '/clinic': clinic_proxy
+      '/fundus': fundus_proxy
+      '/ptlist': ptlist_proxy
+      '/group1': group_proxy
+
+
+  base2api:
+    host: <%= "base2-api.#{domain}" %>
+    routes:
+      '/': base2api_proxy
+
+  helpy:
+    host: <%= "helpy.#{domain}" %>
+    routes:
+      '/': helpy_proxy
+
+  supporthub:
+    host: <%= "supporthub.#{domain}" %>
+    routes:
+      '/': supporthub_proxy
+
+  bizsp:
+    host: <%= "bizsupport.#{domain}" %>
+    routes:
+      '/': bizsp_proxy
+
+  chronic:
+    host:
+<%=
+  sites.collect do |s|
+    "      - \"chronic-#{s}.#{domain}\""
+  end.join("\n")
+%>
+    routes:
+      '/': chronic_proxy
+
+  wapi:
+    host:
+<%=
+  sites.collect do |s|
+    "      - \"wapi.#{s}.#{domain}\""
+  end.join("\n")
+%>
+    routes:
+      '/': wapi_proxy
+
+server:
+  default_host: account

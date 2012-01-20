@@ -1,0 +1,31 @@
+# Nginx Configuration File
+worker_processes 4;
+error_log logs/error.log;
+pid run/nginx.pid;
+
+events {
+  worker_connections 1024;
+}
+
+http {
+  include config/mime.types;
+  default_type application/octet-stream;
+  server_names_hash_bucket_size 256;
+  access_log logs/access.log;
+  sendfile on;
+  keepalive_timeout 0;
+  tcp_nodelay on;
+  gzip on;
+  gzip_min_length 1024;
+  gzip_buffers 4 8k;
+  gzip_types application/x-javascript text/css text/plain;
+  client_max_body_size 100m;
+
+  client_body_temp_path tmp/client_body;
+  proxy_temp_path tmp/proxy;
+  fastcgi_temp_path tmp/fastcgi;
+  uwsgi_temp_path tmp/uwsgi;
+  scgi_temp_path tmp/scgi;
+
+  include config/conf.d/*.conf;
+}

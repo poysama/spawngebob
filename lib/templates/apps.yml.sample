@@ -8,8 +8,8 @@ nginx:
   port: 8088
   ssl: false
   ssl_rewrite: false
-  cert_path: /etc/nginx/caresharing.eu.pem
-  key_path: /etc/nginx/server.key
+  cert_path:
+  key_path:
 
 applications:
   account:

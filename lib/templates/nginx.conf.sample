@@ -27,5 +27,5 @@ http {
   uwsgi_temp_path tmp/uwsgi;
   scgi_temp_path tmp/scgi;
 
-  include config/conf.d/*.conf;
+  include ../conf.d/*.conf;
 }

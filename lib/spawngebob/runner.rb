@@ -77,7 +77,7 @@ module Spawngebob
       when 'check'
         Spawner.check
       when 'configure'
-        Configurator.new.prepare
+        Compilers::Nginx.new.prepare
       else
         puts "I don't know what to do."
       end

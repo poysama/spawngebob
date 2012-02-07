@@ -4,8 +4,8 @@ module Spawngebob
     CONFIG_FILE = 'apps.yml'
 
     NGINX_DEFAULTS = {
-      :listen => '127.0.0.1',
-      :port => '8088'
+      'listen' => '127.0.0.1',
+      'port' => '8088'
     }
 
     COLORS = {
@@ -54,6 +54,7 @@ server {
   ssl_ciphers ALL:!ADH:RC4+RSA:+HIGH:+MEDIUM:-LOW:-SSLv2:-EXP;
 
 %location%
+  include /usr/local/nginx/conf.d/denied_locations.inc;
 }
 NSSL
 

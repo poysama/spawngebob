@@ -29,6 +29,7 @@ module Spawngebob
         if @config['nginx'].include? 'port'
           NGINX_DEFAULTS.update(@config['nginx'])
         end
+        puts NGINX_DEFAULTS.inspect
 
         if @config['nginx']['ssl']
           location_template = NGINX_SSL_LOCATION_TEMPLATE
@@ -64,8 +65,8 @@ module Spawngebob
               s = NGINX_SERVER_TEMPLATE.gsub('%host%', h)
             end
 
-            s = s.gsub('%ip%', NGINX_DEFAULTS[:listen])
-            s = s.gsub('%port%', NGINX_DEFAULTS[:port])
+            s = s.gsub('%ip%', NGINX_DEFAULTS['listen'])
+            s = s.gsub('%port%', NGINX_DEFAULTS['port'].to_s)
             s = s.gsub('%location%', location_string)
 
             @container.concat(s)

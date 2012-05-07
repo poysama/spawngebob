@@ -1,15 +1,13 @@
 require 'yaml'
 require 'erb'
 require 'fileutils'
-require File.join(File.expand_path('../spawngebob/version', __FILE__))
-
-SPAWNGEBOB_LIB_ROOT = File.join(File.dirname(__FILE__), 'spawngebob')
+require 'spawngebob/version'
 
 module Spawngebob
 
-  autoload :Runner, (File.join(SPAWNGEBOB_LIB_ROOT, 'runner'))
-  autoload :Compilers, (File.join(SPAWNGEBOB_LIB_ROOT, 'compilers'))
-  autoload :Spawner, (File.join(SPAWNGEBOB_LIB_ROOT, 'spawner'))
-  autoload :Constants, (File.join(SPAWNGEBOB_LIB_ROOT, 'constants'))
-  autoload :Utils, (File.join(SPAWNGEBOB_LIB_ROOT, 'utils'))
+  autoload :CLI, 'spawngebob/cli'
+  autoload :Compilers, 'spawngebob/compilers'
+  autoload :Constants, 'spawngebob/constants'
+  autoload :Runner, 'spawngebob/runner'
+  autoload :Utils, 'spawngebob/utils'
 end

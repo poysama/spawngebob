@@ -16,6 +16,11 @@ module Spawngebob
       say("#{result} rows", :subitem) if result.is_a?(Integer)
       result
     end
+
+    def self.error(message, code=-1)
+      say("\033[0;31merror: #{message}")
+      exit(code)
+    end
   end
 end
 

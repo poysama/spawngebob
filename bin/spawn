@@ -2,4 +2,4 @@
 
 SPAWNGEBOB_BASE_PATH = File.expand_path('../..', __FILE__)
 require File.join(SPAWNGEBOB_BASE_PATH, 'lib/spawngebob')
-Spawngebob::Runner.boot(ARGV)
+Spawngebob::CLI.start(ARGV)

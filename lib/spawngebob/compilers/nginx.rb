@@ -9,14 +9,14 @@ module Spawngebob
       end
 
       def prepare
-        if !File.exist?(@config_file_path)
-          raise "apps.yml not found in #{NGINX_CONF_PATH}"
-        end
-
         @config = ERB.new(File.read(@config_file_path)).result(binding)
         @config = YAML.load(@config)
 
-        compile!
+        if !@config.is_a? Hash
+          Utils.error "Garbage #{CONFIG_FILE}! Fix it!"
+        else
+          compile!
+        end
       end
 
       def compile!
@@ -29,12 +29,11 @@ module Spawngebob
         if @config['nginx'].include? 'port'
           NGINX_DEFAULTS.update(@config['nginx'])
         end
-        puts NGINX_DEFAULTS.inspect
 
         if @config['nginx']['ssl']
-          location_template = NGINX_SSL_LOCATION_TEMPLATE
+          location_template = NGINX_SSL_LOCATION_TEMPLATE.chomp!
         else
-          location_template = NGINX_HTTP_LOCATION_TEMPLATE
+          location_template = NGINX_HTTP_LOCATION_TEMPLATE.chomp!
         end
 
         # apps
@@ -71,12 +70,10 @@ module Spawngebob
 
             @container.concat(s)
           end
+        end
 
-          confd_path = File.join(NGINX_CONFIG_PATH, 'conf.d')
-
-          FileUtils.mkdir_p(confd_path) if !File.exist? confd_path
-
-          File.open(File.join(confd_path, 'caresharing.conf'), 'w') do |f|
+        File.open(File.join(NGINX_CONFD_PATH, 'caresharing.conf'), 'w') do |f|
+          Utils.say_with_time "Generating new config file..." do
             f.write(@container)
           end
         end

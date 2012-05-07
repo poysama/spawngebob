@@ -1,0 +1,10 @@
+-- 0.1.4
+
+  * thor for CLI
+  * removed spawner class, replaced it with a shell script
+  * version bump
+  * removed colors
+  * more friendly error messages
+  * restart bug loop should be fixed
+  * script is now very powerful. can handle stress
+

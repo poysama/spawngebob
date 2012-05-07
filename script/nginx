@@ -1,0 +1,133 @@
+#!/usr/bin/env sh
+nginx=`which nginx`
+nginx_path=$HOME/.spawngebob/nginx/
+pid_file="${nginx_path}run/nginx.pid"
+prog=$(basename $nginx)
+
+# colors
+green="\033[0;32m"
+yellow="\033[0;33m"
+red="\033[0;31m"
+clear="\033[0;0m"
+nginx_conf_file="$HOME/.spawngebob/nginx/conf/nginx.conf"
+
+lockfile=$HOME/.spawngebob/nginx/tmp/nginx.lock
+
+notice() {
+  echo ""
+  echo "*************** NOTE **********************************"
+  echo " if a permission denied ALERT pops up, ignore it       "
+  echo " info: http://wiki.nginx.org/CoreModule#error_log      "
+  echo "*******************************************************"
+  echo ""
+}
+
+start() {
+  [ -x $nginx ] || exit 5
+  [ -f $nginx_conf_file ] || exit 6
+
+  echo $yellow"Starting $prog:"$clear
+
+
+  notice
+
+  if [ -f $lockfile ] ; then
+    echo $red"  [fail]"$clear "lockfile $lockfile exists. nginx is running with master pid $yellow`cat $pid_file`$clear";
+    exit 8
+  fi
+
+  $nginx -c $nginx_conf_file -p $nginx_path
+
+  retval=$?
+
+  if [ $retval -eq 0 ] ; then
+    touch $lockfile
+    chmod 600 $lockfile
+    echo $green"  [ok]"$clear" $prog started with master pid `cat $pid_file`"
+  else
+    echo $red "  [fail]" $clear"Something went wrong." && exit 8
+  fi
+
+  return $retval
+}
+
+stop() {
+  echo $yellow"Stopping $prog..."$clear
+
+  echo "checking $pid_file..."
+
+  if [ -s $pid_file ] ; then
+    pid=`cat $pid_file`
+    echo "trying to kill pid $pid"
+    kill $pid && echo $green"  [ok]"$clear "pid $yellow$pid$clear killed"
+  else
+    echo $red"  [fail] "$clear"pidfile $pid_file not found" && exit 8
+  fi
+
+  retval=$?
+
+  if [ $retval -eq 0 ] ; then
+    notice
+
+    if [ -f $lockfile ] ; then
+      echo "removing $lockfile..."
+      rm -f $lockfile && echo $green"  [ok]"$clear "lockfile deleted"
+    else
+      echo $red "  [fail]" $clear"lockfile $lockfile not found" && exit 8
+    fi
+  else
+    echo $red "  [fail]" $clear"Something went wrong." && exit 8
+  fi
+
+  return $retval
+}
+
+restart() {
+  configtest || return $?
+  stop
+  start
+}
+
+reload() {
+  configtest || return $?
+  echo $yellow"Reloading $prog:"$clear
+
+  notice
+
+  kill -HUP `cat $pid_file` && echo $green"  [ok]"$clear " reloaded!"
+  retval=$?
+}
+
+configtest() {
+  echo $yellow"Testing configuration for $prog..."$clear
+  $nginx -t -c $nginx_conf_file -p $nginx_path
+}
+
+status() {
+  if [ -f $pid_file ] ; then
+    echo $green"  [ok]"$clear "nginx is running smoothly with pid `cat $pid_file`"
+  else
+    echo $red"  [fail] "$clear"pidfile $pid_file not found" && exit 8
+  fi
+}
+
+case "$1" in
+  start)
+    $1
+    ;;
+  stop)
+    $1
+    ;;
+  restart|configtest)
+    $1
+    ;;
+  reload)
+    $1
+    ;;
+  status)
+    $1
+    ;;
+  *)
+    echo $"Usage: $0 {start|stop|status|restart|reload|configtest}"
+    exit 2
+esac

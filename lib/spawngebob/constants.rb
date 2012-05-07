@@ -1,18 +1,18 @@
 module Spawngebob
   module Constants
+    BASE_CONFIG_PATH = File.join(ENV['HOME'], '.spawngebob')
+    NGINX_PATH = File.join(BASE_CONFIG_PATH, 'nginx')
+    NGINX_CONF_PATH = File.join(NGINX_PATH, 'conf')
+    NGINX_CONFD_PATH = File.join(NGINX_PATH, 'conf.d')
+    NGINX_CONF = 'nginx.conf'
+    NGINX_PID = 'nginx.pid'
     NGINX_DIRS = ['tmp', 'run', 'logs', 'conf.d', 'conf']
     CONFIG_FILE = 'apps.yml'
+    SCRIPT_DIR = File.expand_path(File.join(File.dirname(__FILE__), '../../script/nginx'))
 
     NGINX_DEFAULTS = {
       'listen' => '127.0.0.1',
       'port' => '8088'
-    }
-
-    COLORS = {
-      :green => "\033[1;32m",
-      :red => "\033[1;31m",
-      :yellow =>"\033[1;33m",
-      :blank => "\033[0m"
     }
 
     NGINX_UPSTREAM_TEMPLATE = <<NUT

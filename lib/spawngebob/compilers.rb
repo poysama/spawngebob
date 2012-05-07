@@ -1,5 +1,5 @@
 module Spawngebob
   module Compilers
-    autoload :Nginx, (File.join(SPAWNGEBOB_LIB_ROOT, 'compilers/nginx'))
+    autoload :Nginx, 'spawngebob/compilers/nginx'
   end
 end

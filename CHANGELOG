@@ -1,3 +1,8 @@
+-- 0.1.5
+  * creating for required dirs now happens only in configure
+  * error color red will not span anymore after the error message
+  * changed color in nginx script to call tput setaf rather than escape codes 
+
 -- 0.1.4
 
   * thor for CLI

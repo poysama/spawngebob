@@ -12,17 +12,6 @@ module Spawngebob
     end
 
     def self.has_requirements?
-      # create necessary directories if not exist
-      NGINX_DIRS.each do |d|
-        full_path = File.join(NGINX_PATH, d)
-
-        if !File.exists? full_path
-          Utils.say_with_time "Directory #{full_path} does not exist, creating..." do
-            FileUtils.mkdir_p(full_path)
-          end
-        end
-      end
-
       # check if nginx is installed
       if !Constants.const_defined?("NGINX_BIN")
         Utils.error "Nginx is not installed!"

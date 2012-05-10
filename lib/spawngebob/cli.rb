@@ -2,6 +2,8 @@ require 'thor'
 
 module Spawngebob
   class CLI < Thor
+    include Constants
+
     desc "start", "start nginx"
     def start
       Runner.boot(options)
@@ -29,6 +31,17 @@ module Spawngebob
 
     desc "configure", "generate conf files"
     def configure
+      # create necessary directories if not exist
+      NGINX_DIRS.each do |d|
+        full_path = File.join(NGINX_PATH, d)
+
+        if !File.exists? full_path
+          Utils.say_with_time "Directory #{full_path} does not exist, creating..." do
+            FileUtils.mkdir_p(full_path)
+          end
+        end
+      end
+
       Runner.boot(options)
     end
   end

@@ -18,7 +18,7 @@ module Spawngebob
     end
 
     def self.error(message, code=-1)
-      say("\033[0;31merror: #{message}")
+      say("\033[31merror: #{message}")
       exit(code)
     end
   end
